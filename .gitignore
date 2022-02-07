@@ -1,0 +1,11 @@
+# Virtual Environment Directory
+python/
+
+# SQLite Database
+db.sqlite3
+
+# Pycache Directory
+__pycache__/
+
+# Environment Variables
+.env

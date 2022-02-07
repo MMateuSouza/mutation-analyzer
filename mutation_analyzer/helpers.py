@@ -1,3 +1,6 @@
+import re
+
+
 class MutationAnalyzer:
     @staticmethod
     def __analysis(dna, lines, columns) -> bool:
@@ -9,7 +12,7 @@ class MutationAnalyzer:
 
                 has_not_horizontal_overflow = (y + 4 <= columns)
                 has_not_bottom_vertical_overflow = (x + 4 <= lines)
-                has_not_reverse_horizontal_overflow = (3 - y >= 0)  # Esquerda para direita
+                has_not_reverse_horizontal_overflow = (3 - y >= 0) # Esquerda para direita
 
                 # Horizontal se estiver no limite de colunas
                 if has_not_horizontal_overflow:
@@ -83,6 +86,7 @@ class MutationAnalyzer:
         if MutationAnalyzer.__check_summation(summation):
             return 1
 
+        # Eliminar DNAs que não são válidos logo de imediato
         if MutationAnalyzer.__check_cartesian_limits(lines, columns, x, y):
             return 0
 
@@ -117,19 +121,54 @@ class MutationAnalyzer:
             print()
 
     @staticmethod
+    def __validate_dna_sequence(dna) -> bool:
+        dna_string = "".join(dna_sequence for dna_sequence in dna)
+        return bool(re.search(r"^[A|a|C|c|G|g|T|t]+$", dna_string))
+
+    @staticmethod
+    def __validate_dna_matrix_order(lines, columns) -> bool:
+        # A matriz precisa ser (N x N), ou seja, linhas iguais a colunas
+        return lines == columns
+
+    @staticmethod
+    def __validate_dna_required_length(lines) -> bool:
+        # Se a matriz (N x N) for inferior a 4 não será possível ter repetições
+        return lines > 4
+
+    @staticmethod
+    def __dna_is_valid(dna, lines, columns) -> bool:
+        return MutationAnalyzer.__validate_dna_required_length(lines) and \
+               MutationAnalyzer.__validate_dna_matrix_order(lines, columns) and \
+               MutationAnalyzer.__validate_dna_sequence(dna)
+
+    @staticmethod
     def has_mutation(dna: list) -> bool:
         lines = len(dna)
         columns = len(dna[0]) if lines > 0 else 0
 
-        # Se a matriz (N x N) for inferior a 4 não será possível ter repetições
-        if lines < 4:
-            return False
+        if not MutationAnalyzer.__dna_is_valid(dna, lines, columns):
+            return False, "O DNA informado é inválido."
 
-        return MutationAnalyzer.__analysis(dna, lines, columns)
+        return MutationAnalyzer.__analysis(dna, lines, columns), "O DNA informado é válido."
 
 
 def main() -> None:
     dna = ["CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    MutationAnalyzer.print_dna(dna)
+    print(has_mutation)
+
+    dna = ["CTG", "CTA", "TAT",]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    MutationAnalyzer.print_dna(dna)
+    print(has_mutation)
+
+    dna = ["A", "CC", "TTT", "GGGG"]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    MutationAnalyzer.print_dna(dna)
+    print(has_mutation)
+
+    dna = []
     has_mutation = MutationAnalyzer.has_mutation(dna)
     MutationAnalyzer.print_dna(dna)
     print(has_mutation)
