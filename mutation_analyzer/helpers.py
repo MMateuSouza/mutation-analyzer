@@ -121,8 +121,12 @@ class MutationAnalyzer:
             print()
 
     @staticmethod
-    def __validate_dna_sequence(dna) -> bool:
-        dna_string = "".join(dna_sequence for dna_sequence in dna)
+    def __get_dna_list_into_str(dna: list) -> str:
+        return "".join(str(dna_sequence).strip() for dna_sequence in dna)
+
+    @staticmethod
+    def __validate_dna_sequence(dna: list) -> bool:
+        dna_string = MutationAnalyzer.__get_dna_list_into_str(dna)
         return bool(re.search(r"^[A|a|C|c|G|g|T|t]+$", dna_string))
 
     @staticmethod
@@ -136,20 +140,25 @@ class MutationAnalyzer:
         return lines > 4
 
     @staticmethod
+    def __validate_dna_object_required_type(dna) -> bool:
+        return type(dna) == list
+
+    @staticmethod
     def __dna_is_valid(dna, lines, columns) -> bool:
-        return MutationAnalyzer.__validate_dna_required_length(lines) and \
+        return MutationAnalyzer.__validate_dna_object_required_type(dna) and \
+               MutationAnalyzer.__validate_dna_required_length(lines) and \
                MutationAnalyzer.__validate_dna_matrix_order(lines, columns) and \
                MutationAnalyzer.__validate_dna_sequence(dna)
 
     @staticmethod
-    def has_mutation(dna: list) -> bool:
+    def has_mutation(dna: list) -> tuple:
         lines = len(dna)
-        columns = len(dna[0]) if lines > 0 else 0
+        columns = len(dna[0]) if lines > 0 and type(dna[0]) == str else 0
 
         if not MutationAnalyzer.__dna_is_valid(dna, lines, columns):
-            return False, "O DNA informado é inválido."
+            return False, False, "O DNA informado é inválido.", None
 
-        return MutationAnalyzer.__analysis(dna, lines, columns), "O DNA informado é válido."
+        return MutationAnalyzer.__analysis(dna, lines, columns), True, "O DNA informado é válido.", MutationAnalyzer.__get_dna_list_into_str(dna)
 
 
 def main() -> None:
@@ -171,6 +180,11 @@ def main() -> None:
     dna = []
     has_mutation = MutationAnalyzer.has_mutation(dna)
     MutationAnalyzer.print_dna(dna)
+    print(has_mutation)
+
+    dna = ["CTGGAA", "CTGCTC", "TGCTGT", "AGAGGG", "TCCCTA", "TCACTG"]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    print(MutationAnalyzer.print_dna(dna))
     print(has_mutation)
 
 

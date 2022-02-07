@@ -9,3 +9,6 @@ __pycache__/
 
 # Environment Variables
 .env
+
+# Visual Studio Code Files
+.vscode/

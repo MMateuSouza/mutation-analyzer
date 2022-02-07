@@ -1,5 +1,7 @@
 from django.db import models
 
+from mutation_analyzer.helpers import MutationAnalyzer
+
 
 class AnalyzedDna(models.Model):
     HUMAN = "H"
@@ -18,6 +20,9 @@ class AnalyzedDna(models.Model):
         verbose_name = "DNA Analisado"
         verbose_name_plural = "DNAs Analizados"
 
+    def __str__(self) -> str:
+        return f"[{self.get_type_display()}] {self.dna}"
+
     @staticmethod
     def get_stats() -> tuple:
         count_mutants_dna = AnalyzedDna.objects.filter(type=AnalyzedDna.MUTANT).count()
@@ -25,3 +30,13 @@ class AnalyzedDna(models.Model):
         ratio = count_mutants_dna / count_human_dna if count_human_dna > 0 else 0
 
         return count_mutants_dna, count_human_dna, ratio
+
+    @staticmethod
+    def has_mutation(dna: list) -> tuple:
+        success, is_valid, message, dna_string = MutationAnalyzer.has_mutation(dna)
+
+        if is_valid:
+            dna_type = AnalyzedDna.MUTANT if success else AnalyzedDna.HUMAN
+            dna_object, created = AnalyzedDna.objects.get_or_create(dna=dna_string, type=dna_type)
+
+        return success, is_valid, message

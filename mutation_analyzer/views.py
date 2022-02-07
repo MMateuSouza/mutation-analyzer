@@ -2,7 +2,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 
-from mutation_analyzer.helpers import MutationAnalyzer
 from mutation_analyzer.models import AnalyzedDna
 from mutation_analyzer.utils import json_response, json_serializer
 
@@ -16,10 +15,10 @@ class MutationAnalyzerView(View):
         if not dna:
             return json_response({"success": False, "message": "É necessário informar uma cadeia de DNA"}, 403)
 
-        success, message = MutationAnalyzer.has_mutation(dna)
+        success, is_valid, message = AnalyzedDna.has_mutation(dna)
         status_code = 200 if success else 403
 
-        return json_response({"success": success, "message": message}, status_code)
+        return json_response({"success": success, "is_valid": is_valid, "message": message}, status_code)
 
 
 class StatsView(View):
