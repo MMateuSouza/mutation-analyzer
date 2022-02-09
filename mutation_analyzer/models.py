@@ -39,4 +39,9 @@ class AnalyzedDna(models.Model):
             dna_type = AnalyzedDna.MUTANT if success else AnalyzedDna.HUMAN
             dna_object, created = AnalyzedDna.objects.get_or_create(dna=dna_string, type=dna_type)
 
+        """
+        success -> Especifica se a análise é mutante ou humano. False::Humano, True::Mutante
+        is_valid -> Especifica se o padrão enviado é um DNA válido para análise
+        message -> Mensagem descritiva do erro/sucesso
+        """
         return success, is_valid, message

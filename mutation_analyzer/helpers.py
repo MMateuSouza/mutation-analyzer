@@ -6,6 +6,10 @@ class MutationAnalyzer:
     def __analysis(dna, lines, columns) -> bool:
         nitrogen_bases_sequences_found = 0
 
+        # Descartar análise se o DNA não possuir matriz necessária
+        if not MutationAnalyzer.__validate_dna_required_length(lines):
+            return False
+
         for x in range(lines):
             for y in range(columns):
                 current_nitrogen_base = dna[x][y]
@@ -112,8 +116,8 @@ class MutationAnalyzer:
 
     @staticmethod
     def print_dna(dna):
-        lines = len(dna)
-        columns = len(dna[0]) if lines > 0 else 0
+        lines = len(dna) if type(dna) == list else 0
+        columns = len(dna[0]) if lines > 0 and type(dna[0]) == str else 0
 
         for x in range(lines):
             for y in range(columns):
@@ -146,13 +150,12 @@ class MutationAnalyzer:
     @staticmethod
     def __dna_is_valid(dna, lines, columns) -> bool:
         return MutationAnalyzer.__validate_dna_object_required_type(dna) and \
-               MutationAnalyzer.__validate_dna_required_length(lines) and \
                MutationAnalyzer.__validate_dna_matrix_order(lines, columns) and \
                MutationAnalyzer.__validate_dna_sequence(dna)
 
     @staticmethod
     def has_mutation(dna: list) -> tuple:
-        lines = len(dna)
+        lines = len(dna) if type(dna) == list else 0
         columns = len(dna[0]) if lines > 0 and type(dna[0]) == str else 0
 
         if not MutationAnalyzer.__dna_is_valid(dna, lines, columns):
@@ -183,6 +186,26 @@ def main() -> None:
     print(has_mutation)
 
     dna = ["CTGGAA", "CTGCTC", "TGCTGT", "AGAGGG", "TCCCTA", "TCACTG"]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    print(MutationAnalyzer.print_dna(dna))
+    print(has_mutation)
+
+    dna = ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    print(MutationAnalyzer.print_dna(dna))
+    print(has_mutation)
+
+    dna = [1, 22, 333, 4444, 55555, 666666]
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    print(MutationAnalyzer.print_dna(dna))
+    print(has_mutation)
+
+    dna = 0
+    has_mutation = MutationAnalyzer.has_mutation(dna)
+    print(MutationAnalyzer.print_dna(dna))
+    print(has_mutation)
+
+    dna = None
     has_mutation = MutationAnalyzer.has_mutation(dna)
     print(MutationAnalyzer.print_dna(dna))
     print(has_mutation)
