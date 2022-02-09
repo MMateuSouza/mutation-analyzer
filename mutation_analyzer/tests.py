@@ -2,8 +2,6 @@ from django.db.utils import IntegrityError
 from django.test import Client, TestCase
 from django.urls import reverse
 
-import json
-
 from mutation_analyzer.models import AnalyzedDna
 
 
