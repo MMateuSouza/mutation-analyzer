@@ -12,3 +12,6 @@ __pycache__/
 
 # Visual Studio Code Files
 .vscode/
+
+# Production Static Files Directory
+static_prd/

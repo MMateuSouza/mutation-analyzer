@@ -18,4 +18,8 @@ server {
         uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
         uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
     }
+
+    location /static {
+        alias /var/www/${STATIC_ROOT};
+    }
 }

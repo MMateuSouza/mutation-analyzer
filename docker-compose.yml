@@ -5,12 +5,14 @@ services:
     container_name: mutation-analyzer-nginx
     volumes:
       - ./infra/nginx:/etc/nginx/templates
+      - ./${STATIC_ROOT}:/var/www/${STATIC_ROOT}
     ports:
       - "80:${NGINX_PORT}"
     environment:
       - NGINX_HOST=${NGINX_HOST}
       - NGINX_PORT=${NGINX_PORT}
       - UWSGI_PORT=${UWSGI_PORT}
+      - STATIC_ROOT=${STATIC_ROOT}
     networks:
       - mutation-analyzer-network
     depends_on:
