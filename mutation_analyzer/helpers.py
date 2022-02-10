@@ -154,6 +154,10 @@ class MutationAnalyzer:
                MutationAnalyzer.__validate_dna_sequence(dna)
 
     @staticmethod
+    def __dna_to_upper(dna) -> list:
+        return [_.upper() for _ in dna]
+
+    @staticmethod
     def has_mutation(dna: list) -> tuple:
         lines = len(dna) if type(dna) == list else 0
         columns = len(dna[0]) if lines > 0 and type(dna[0]) == str else 0
@@ -161,11 +165,12 @@ class MutationAnalyzer:
         if not MutationAnalyzer.__dna_is_valid(dna, lines, columns):
             return False, False, "O DNA informado é inválido.", None
 
+        dna = MutationAnalyzer.__dna_to_upper(dna)
         return MutationAnalyzer.__analysis(dna, lines, columns), True, "O DNA informado é válido.", MutationAnalyzer.__get_dna_list_into_str(dna)
 
 
 def main() -> None:
-    dna = ["CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"]
+    dna = ["CTGagA", "CTATGC", "TATTGT", "AGAGgG", "CcCcTA", "TCACTG"]
     has_mutation = MutationAnalyzer.has_mutation(dna)
     MutationAnalyzer.print_dna(dna)
     print(has_mutation)
