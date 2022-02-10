@@ -1,6 +1,6 @@
 # Mutation Analyzer
 
-<!-- Adicionar descrição do projeto -->
+Projeto que detecta se uma sequência de DNA pertence a um humano ou a um mutante.
 
 ## Estrutura do Projeto
 
@@ -73,3 +73,49 @@ Iniciar os containers do _NGINX_, _PostgreSQL_ e _Aplicação_:
 ```
 
 O serviço estará disponível em [http://localhost/](http://localhost/).
+
+## Utilização da API
+
+A API possui dois *endpoints*, um para análise de DNA e outro de análise estatísticas (Quantidade de DNAs mutantes e humanos, além da relação de DNAs mutantes entre os humanos).
+
+### Análise de DNA mutante
+
+#### Request
+
+`POST /mutants/`
+
+```json
+{
+  "dna": ["CTGGAA", "CTGCTC", "TGCTGT", "AGAGGG", "TCCCTA", "TCACTG"]
+}
+```
+
+> A chave `dna` é **obrigatória**.
+
+#### Response
+
+```json
+{"success": false, "is_valid": true, "message": "O DNA informado é válido."}
+```
+
+> `success`: Especifica se a análise foi um DNA mutante ou humano. (`false` é humano, `true` é mutante).
+
+> `is_valid`: Especifica se o DNA enviado é uma cadeira válida.
+
+> `message`: Um *feedback* verboso.
+
+### Estatísticas
+
+#### Request
+
+`GET /stats/`
+#### Response
+
+```json
+{"count_mutants_dna": 0, "count_human_dna": 0, "ratio": 0}
+```
+> `count_mutants_dna`: Quantidade de DNAs mutantes analisados.
+
+> `count_human_dna`: Quantidade de DNAs humanos analisados.
+
+> `ratio`: Relação entre DNAs mutantes e humanos.
